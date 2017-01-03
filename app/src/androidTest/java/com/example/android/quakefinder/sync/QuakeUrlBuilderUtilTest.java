@@ -11,10 +11,10 @@ import java.net.URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class QuakeUrlBuilderTest {
+public class QuakeUrlBuilderUtilTest {
 
     @Test
-    public void test_buildUri() throws MalformedURLException {
+    public void test_buildUrl() throws MalformedURLException {
         // given and when
         final URL url = QuakeUrlBuilderUtil.buildUrl();
 
