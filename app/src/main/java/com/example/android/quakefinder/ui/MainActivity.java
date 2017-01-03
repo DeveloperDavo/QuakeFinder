@@ -1,4 +1,4 @@
-package com.example.android.quakefinder;
+package com.example.android.quakefinder.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.quakefinder.R;
 import com.example.android.quakefinder.sync.QuakeSyncTask;
 
 import butterknife.BindView;

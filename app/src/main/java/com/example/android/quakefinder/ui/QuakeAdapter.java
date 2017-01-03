@@ -1,4 +1,4 @@
-package com.example.android.quakefinder;
+package com.example.android.quakefinder.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.android.quakefinder.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
