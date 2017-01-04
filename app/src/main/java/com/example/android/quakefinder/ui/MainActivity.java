@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.rv_earthquakes)
     RecyclerView recyclerView;
 
+    private QuakeAdapter quakeAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpActionBar();
         setUpRV();
+
+        loadQuakeData();
     }
 
     private void setUpActionBar() {
@@ -39,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRV() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new QuakeAdapter());
+        quakeAdapter = new QuakeAdapter();
+        recyclerView.setAdapter(quakeAdapter);
     }
 
     @Override
@@ -54,10 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_refresh) {
             Log.d(LOG_TAG, "refresh");
-            new QuakeSyncTask().execute();
+            loadQuakeData();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadQuakeData() {
+        new QuakeSyncTask(quakeAdapter).execute();
     }
 }

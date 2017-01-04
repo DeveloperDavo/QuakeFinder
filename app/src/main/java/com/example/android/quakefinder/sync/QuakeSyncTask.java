@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.quakefinder.data.Earthquake;
+import com.example.android.quakefinder.ui.QuakeAdapter;
 
 import org.json.JSONException;
 
@@ -24,6 +25,12 @@ import java.util.List;
 public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
     private static final String LOG_TAG = QuakeSyncTask.class.getSimpleName();
 
+    private final QuakeAdapter quakeAdapter;
+
+    public QuakeSyncTask(QuakeAdapter quakeAdapter) {
+        this.quakeAdapter = quakeAdapter;
+    }
+
     @Override
     protected List<Earthquake> doInBackground(Void... params) {
         List<Earthquake> earthquakes = new ArrayList<>();
@@ -33,6 +40,13 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
         return earthquakes;
+    }
+
+    @Override
+    protected void onPostExecute(List<Earthquake> earthquakes) {
+        if (earthquakes != null) {
+            quakeAdapter.setData(earthquakes);
+        }
     }
 
     private String getJsonString() {

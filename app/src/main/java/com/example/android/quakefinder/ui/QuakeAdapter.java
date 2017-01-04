@@ -1,6 +1,5 @@
 package com.example.android.quakefinder.ui;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.quakefinder.R;
+import com.example.android.quakefinder.data.Earthquake;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,26 +21,33 @@ import butterknife.ButterKnife;
 public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHolder> {
     private static final String LOG_TAG = QuakeAdapter.class.getSimpleName();
 
+    private List<Earthquake> earthquakes;
+
+    public void setData(List<Earthquake> earthquakes) {
+        this.earthquakes = earthquakes;
+        notifyDataSetChanged();
+    }
+
     @Override
     public QuakeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final Context context = parent.getContext();
-        final int layoutIdForListItem = R.layout.earthquake_list_item;
-        final LayoutInflater inflater = LayoutInflater.from(context);
-        final boolean shouldAttachToParentImmediately = false;
-
-        final View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final View view = inflater.inflate(R.layout.earthquake_list_item, parent, false);
 
         return new QuakeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(QuakeViewHolder holder, int position) {
-        holder.placeTextView.setText("test");
+        holder.bind(earthquakes.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 17;
+        if (earthquakes != null) {
+            return earthquakes.size();
+        } else {
+            return 0;
+        }
     }
 
     class QuakeViewHolder extends RecyclerView.ViewHolder {
@@ -49,6 +58,10 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
         QuakeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        void bind(Earthquake earthquake) {
+            placeTextView.setText(earthquake.getPlace());
         }
     }
 }
