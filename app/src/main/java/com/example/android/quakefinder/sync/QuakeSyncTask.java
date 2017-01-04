@@ -4,50 +4,55 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.android.quakefinder.data.Earthquake;
+
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by David on 03/01/2017.
  */
 
-public class QuakeSyncTask extends AsyncTask<Void, Void, Void> {
+public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
     private static final String LOG_TAG = QuakeSyncTask.class.getSimpleName();
 
     @Override
-    protected Void doInBackground(Void... params) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
+    protected List<Earthquake> doInBackground(Void... params) {
+        List<Earthquake> earthquakes = new ArrayList<>();
+        try {
+            earthquakes = JsonUtil.parse(getJsonString());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+        return earthquakes;
+    }
 
+    private String getJsonString() {
+        HttpURLConnection urlConnection = null;
+        BufferedReader bufferedReader = null;
         try {
             final URL url = QuakeUrlBuilderUtil.buildUrl();
             Log.d(LOG_TAG, "url: " + url);
 
             urlConnection = connect(url);
             final InputStream inputStream = urlConnection.getInputStream();
-            final StringBuilder buffer = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // helpful for debugging
-                buffer.append(line).append("\n");
-            }
-
-            final String jsonString = buffer.toString();
-            Log.d(LOG_TAG, "jsonString: " + jsonString);
-            // TODO: parse string
+            return getJsonString(bufferedReader);
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
+            return "";
         } finally {
-            disconnectAndClose(urlConnection, reader);
+            disconnectAndClose(urlConnection, bufferedReader);
         }
-
-        return null;
     }
 
     @NonNull
@@ -56,6 +61,26 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, Void> {
         urlConnection.setRequestMethod("GET");
         urlConnection.connect();
         return urlConnection;
+    }
+
+    @NonNull
+    private String getJsonString(BufferedReader bufferedReader) throws IOException {
+        final StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            // helpful for debugging
+            stringBuilder.append(line).append("\n");
+        }
+
+        String jsonString = stringBuilder.toString();
+        // remove "eqfeed_callback(...)" from string
+        final String startOfJsonStr = "eqfeed_callback(";
+        if (jsonString.startsWith(startOfJsonStr)) {
+            jsonString = jsonString.replace(startOfJsonStr, "");
+            jsonString = jsonString.substring(0, jsonString.length());
+        }
+        Log.d(LOG_TAG, "jsonString: " + jsonString);
+        return jsonString;
     }
 
     private void disconnectAndClose(HttpURLConnection urlConnection, BufferedReader reader) {
