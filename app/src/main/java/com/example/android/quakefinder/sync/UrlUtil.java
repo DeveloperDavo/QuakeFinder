@@ -8,11 +8,11 @@ import java.net.URL;
 /**
  * Created by David on 03/01/2017.
  */
-final class QuakeUrlBuilderUtil {
-    private static final String LOG_TAG = QuakeUrlBuilderUtil.class.getSimpleName();
+final class UrlUtil {
+    private static final String LOG_TAG = UrlUtil.class.getSimpleName();
 
     /* Private Constructor */
-    private QuakeUrlBuilderUtil() {
+    private UrlUtil() {
         throw new AssertionError();
     }
 

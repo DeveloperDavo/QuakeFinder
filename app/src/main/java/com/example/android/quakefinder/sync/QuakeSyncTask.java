@@ -39,7 +39,7 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         try {
-            final URL url = QuakeUrlBuilderUtil.buildUrl();
+            final URL url = UrlUtil.buildUrl();
             Log.d(LOG_TAG, "url: " + url);
 
             urlConnection = connect(url);
