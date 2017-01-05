@@ -24,7 +24,7 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
     private List<Earthquake> earthquakes;
     private QuakeAdapterOnClickHandler clickHandler;
 
-    public QuakeAdapter(QuakeAdapterOnClickHandler clickHandler) {
+    QuakeAdapter(QuakeAdapterOnClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 

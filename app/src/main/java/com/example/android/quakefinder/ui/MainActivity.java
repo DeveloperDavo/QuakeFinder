@@ -3,13 +3,12 @@ package com.example.android.quakefinder.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,7 +19,10 @@ import com.example.android.quakefinder.sync.QuakeSyncTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements QuakeAdapter.QuakeAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements
+        QuakeAdapter.QuakeAdapterOnClickHandler,
+        SwipeRefreshLayout.OnRefreshListener {
+
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.rv_earthquakes)
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
 
     @BindView(R.id.tv_error_message)
     TextView errorMessageTV;
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private QuakeAdapter quakeAdapter;
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
 
         setUpActionBar();
         setUpRV();
+        setUpRefreshListener();
 
         loadQuakeData();
     }
@@ -60,6 +66,20 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
         recyclerView.setAdapter(quakeAdapter);
     }
 
+    private void setUpRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshing(true);
+        onRefresh();
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(LOG_TAG, "onRefresh called");
+        loadQuakeData();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -79,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @Override
     public void onClick(Earthquake earthquake) {
@@ -97,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
     private void loadQuakeData() {
         final VisibilityToggle visibilityToggle = new VisibilityToggle(recyclerView, errorMessageTV, progressBar);
         visibilityToggle.showData();
+        quakeAdapter.setData(null);
         new QuakeSyncTask(quakeAdapter, visibilityToggle).execute();
     }
 

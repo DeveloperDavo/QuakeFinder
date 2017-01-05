@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">QuakeFinder</string>
     <string name="action_refresh">Refresh</string>
-    <string name="error_message">An error has occurred. Try refreshing the app.</string>
+    <string name="error_message">An error has occurred. Please check your internet connection and then swipe down to refresh the app.</string>
 </resources>
