@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">QuakeFinder</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="error_message">An error has occurred. Please check your internet connection and then swipe down to refresh the app.</string>
+    <string name="app_name" translatable="false">QuakeFinder</string>
+    <string name="error_message">There are no earthquakes to display or an error occurred. Please ensure you are connected to the internet and then swipe down to refresh the app.</string>
+    <string name="param_significant_title">Significant</string>
+    <string name="param_significant" translatable="false">significant</string>
+    <string name="param_all_title">All</string>
+    <string name="param_all">all</string>
 </resources>

@@ -23,7 +23,7 @@ import java.util.List;
  * Created by David on 03/01/2017.
  */
 
-public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
+public class QuakeSyncTask extends AsyncTask<String, Void, List<Earthquake>> {
     private static final String LOG_TAG = QuakeSyncTask.class.getSimpleName();
 
     private final QuakeAdapter quakeAdapter;
@@ -41,10 +41,13 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
     }
 
     @Override
-    protected List<Earthquake> doInBackground(Void... params) {
+    protected List<Earthquake> doInBackground(String... params) {
         List<Earthquake> earthquakes = new ArrayList<>();
+        if (params.length == 0) {
+            return earthquakes;
+        }
         try {
-            earthquakes = JsonUtil.parse(getJsonString());
+            earthquakes = JsonUtil.parse(getJsonString(params[0]));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
@@ -62,11 +65,11 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
         }
     }
 
-    private String getJsonString() {
+    private String getJsonString(String severity) {
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         try {
-            final URL url = UrlUtil.buildUrl();
+            final URL url = UrlUtil.buildUrl(severity);
             Log.d(LOG_TAG, "url: " + url);
 
             urlConnection = connect(url);

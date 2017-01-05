@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.quakefinder.ui.MainActivity">
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.example.android.quakefinder.ui.MainActivity">
     <item
-        android:id="@+id/action_refresh"
-        android:orderInCategory="1"
-        android:title="@string/action_refresh"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_all"
+        android:title="@string/param_all_title"/>
+    <item
+        android:id="@+id/action_significant"
+        android:title="@string/param_significant_title"/>
 </menu>

@@ -3,12 +3,15 @@ package com.example.android.quakefinder.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements
     SwipeRefreshLayout swipeRefreshLayout;
 
     private QuakeAdapter quakeAdapter;
+    private int severityId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -90,16 +93,19 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
-            Log.d(LOG_TAG, "refresh");
-            quakeAdapter.setData(null);
-            loadQuakeData();
-            return true;
+        if (id == R.id.action_significant) {
+            Log.d(LOG_TAG, "significant");
+            severityId = R.string.param_significant;
+        } else if (id == R.id.action_all) {
+            Log.d(LOG_TAG, "all");
+            severityId = R.string.param_all;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
+        loadQuakeData();
+        return true;
 
-        return super.onOptionsItemSelected(item);
     }
-    */
 
     @Override
     public void onClick(Earthquake earthquake) {
@@ -119,7 +125,15 @@ public class MainActivity extends AppCompatActivity implements
         final VisibilityToggle visibilityToggle = new VisibilityToggle(recyclerView, errorMessageTV, progressBar);
         visibilityToggle.showData();
         quakeAdapter.setData(null);
-        new QuakeSyncTask(quakeAdapter, visibilityToggle).execute();
+        new QuakeSyncTask(quakeAdapter, visibilityToggle).execute(getSeverity());
+    }
+
+    @NonNull
+    private String getSeverity() {
+        if (severityId == 0) {
+            severityId = R.string.param_all;
+        }
+        return getString(severityId);
     }
 
 }

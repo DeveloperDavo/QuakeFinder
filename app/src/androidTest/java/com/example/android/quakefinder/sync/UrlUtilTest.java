@@ -16,7 +16,8 @@ public class UrlUtilTest {
     @Test
     public void test_buildUrl() throws MalformedURLException {
         // given and when
-        final URL url = UrlUtil.buildUrl();
+        final String severity = "all";
+        final URL url = UrlUtil.buildUrl(severity);
 
         // then
         final URL expected = new URL("http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojsonp");
