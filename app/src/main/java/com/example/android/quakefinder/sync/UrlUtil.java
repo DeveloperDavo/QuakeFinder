@@ -11,7 +11,7 @@ import java.net.URL;
 final class UrlUtil {
     private static final String LOG_TAG = UrlUtil.class.getSimpleName();
 
-    /* Private Constructor */
+    /* Class should not be instantiated */
     private UrlUtil() {
         throw new AssertionError();
     }

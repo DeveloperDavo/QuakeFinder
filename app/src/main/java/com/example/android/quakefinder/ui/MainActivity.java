@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             return super.onOptionsItemSelected(item);
         }
+
         loadQuakeData();
         return true;
-
     }
 
     @Override

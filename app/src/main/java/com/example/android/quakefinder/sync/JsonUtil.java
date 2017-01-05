@@ -17,6 +17,13 @@ import java.util.List;
 
 class JsonUtil {
 
+    private static final String USGS_FEATURES = "features";
+    private static final String USGS_PROPERTIES = "properties";
+    private static final String USGS_MAG = "mag";
+    private static final String USGS_PLACE = "place";
+    private static final String USGS_URL = "url";
+
+    /* Class should not be instantiated */
     private JsonUtil() {
         throw new AssertionError();
     }
@@ -24,7 +31,7 @@ class JsonUtil {
     static List<Earthquake> parse(String jsonString) throws JSONException {
         final ArrayList<Earthquake> earthquakes = new ArrayList<>();
         final JSONObject jsonObject = new JSONObject(jsonString);
-        final JSONArray features = jsonObject.getJSONArray("features");
+        final JSONArray features = jsonObject.getJSONArray(USGS_FEATURES);
         for (int i = 0; i < features.length(); i++) {
             earthquakes.add(parseEarthquake(features, i));
         }
@@ -34,10 +41,10 @@ class JsonUtil {
     @NonNull
     private static Earthquake parseEarthquake(JSONArray features, int i) throws JSONException {
         final JSONObject feature = features.getJSONObject(i);
-        final JSONObject properties = feature.getJSONObject("properties");
-        final double mag = properties.getDouble("mag");
-        final String place = properties.getString("place");
-        final String url = properties.getString("url");
+        final JSONObject properties = feature.getJSONObject(USGS_PROPERTIES);
+        final double mag = properties.getDouble(USGS_MAG);
+        final String place = properties.getString(USGS_PLACE);
+        final String url = properties.getString(USGS_URL);
         return new Earthquake(mag, place, url);
     }
 }
