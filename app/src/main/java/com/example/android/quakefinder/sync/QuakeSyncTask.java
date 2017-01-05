@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.android.quakefinder.data.Earthquake;
 import com.example.android.quakefinder.ui.QuakeAdapter;
+import com.example.android.quakefinder.ui.VisibilityToggle;
 
 import org.json.JSONException;
 
@@ -26,9 +27,17 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
     private static final String LOG_TAG = QuakeSyncTask.class.getSimpleName();
 
     private final QuakeAdapter quakeAdapter;
+    private final VisibilityToggle visibilityToggle;
 
-    public QuakeSyncTask(QuakeAdapter quakeAdapter) {
+    public QuakeSyncTask(QuakeAdapter quakeAdapter, VisibilityToggle visibilityToggle) {
         this.quakeAdapter = quakeAdapter;
+        this.visibilityToggle = visibilityToggle;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        visibilityToggle.showProgressBar();
     }
 
     @Override
@@ -44,8 +53,12 @@ public class QuakeSyncTask extends AsyncTask<Void, Void, List<Earthquake>> {
 
     @Override
     protected void onPostExecute(List<Earthquake> earthquakes) {
-        if (earthquakes != null) {
+        visibilityToggle.hideProgressBar();
+        if (earthquakes != null && earthquakes.size() > 0) {
+            visibilityToggle.showData();
             quakeAdapter.setData(earthquakes);
+        } else {
+            visibilityToggle.showErrorMessage();
         }
     }
 

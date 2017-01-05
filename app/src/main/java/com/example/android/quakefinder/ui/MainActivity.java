@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.android.quakefinder.R;
 import com.example.android.quakefinder.data.Earthquake;
@@ -23,6 +25,12 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
 
     @BindView(R.id.rv_earthquakes)
     RecyclerView recyclerView;
+
+    @BindView(R.id.pb_earthquakes)
+    ProgressBar progressBar;
+
+    @BindView(R.id.tv_error_message)
+    TextView errorMessageTV;
 
     private QuakeAdapter quakeAdapter;
 
@@ -45,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
     }
 
     private void setUpRV() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         quakeAdapter = new QuakeAdapter(this);
         recyclerView.setAdapter(quakeAdapter);
     }
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
 
         if (id == R.id.action_refresh) {
             Log.d(LOG_TAG, "refresh");
+            quakeAdapter.setData(null);
             loadQuakeData();
             return true;
         }
@@ -84,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements QuakeAdapter.Quak
     }
 
     private void loadQuakeData() {
-        new QuakeSyncTask(quakeAdapter).execute();
+        final VisibilityToggle visibilityToggle = new VisibilityToggle(recyclerView, errorMessageTV, progressBar);
+        visibilityToggle.showData();
+        new QuakeSyncTask(quakeAdapter, visibilityToggle).execute();
     }
 
 }

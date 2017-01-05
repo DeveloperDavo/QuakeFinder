@@ -33,12 +33,12 @@
             tools:text="Region Region Region Region"/>
 
         <!--<TextView-->
-            <!--android:id="@+id/tv_time"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"-->
-            <!--android:textColor="@android:color/tertiary_text_light"-->
-            <!--tools:text="00:00:00"/>-->
+        <!--android:id="@+id/tv_time"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"-->
+        <!--android:textColor="@android:color/tertiary_text_light"-->
+        <!--tools:text="00:00:00"/>-->
 
     </LinearLayout>
 
