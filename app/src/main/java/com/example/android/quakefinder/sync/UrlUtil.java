@@ -7,6 +7,8 @@ import java.net.URL;
 
 /**
  * Created by David on 03/01/2017.
+ * <p>
+ * Utility class to assist with building the url.
  */
 final class UrlUtil {
     private static final String LOG_TAG = UrlUtil.class.getSimpleName();

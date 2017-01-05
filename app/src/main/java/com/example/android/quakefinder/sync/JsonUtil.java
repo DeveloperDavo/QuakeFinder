@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by David on 04/01/2017.
+ *
+ * Utility class to assist parsing json.
  */
 
 class JsonUtil {

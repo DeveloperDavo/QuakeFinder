@@ -21,6 +21,8 @@ import java.util.List;
 
 /**
  * Created by David on 03/01/2017.
+ * <p>
+ * Connects to the server on the background thread using the url built in UrlUtil.
  */
 
 public class QuakeSyncTask extends AsyncTask<String, Void, List<Earthquake>> {

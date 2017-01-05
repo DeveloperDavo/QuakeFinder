@@ -8,20 +8,12 @@ After clicking an item in the list the user is re-directed to the USGS website w
 <img src="screenshots/Screenshot_2017-01-05-17-58-26.png" width="400">
 
 ## Technical Design
-### main
-#### java
 * The project is split into three packages: `data`, `sync` and `ui`
-* `ui` contains `MainActivity`, `QuakeAdapter`, which is the adapter used in the `RecyclerView` and `VisibilityToggle`. `VisibilityToggle` toggles the visibility for the data, progress bar and error message, in case there are not earthquakes to display or their is no internet connection.
-* `sync` contains `QuakeSyncTask`, which is an `AsyncTask` and has supporting classes `JsonUtil` and `UrlUtil`, which were completed using TDD
-* `data` contains `Earthquake`, which contains the necessary data to be displayed
-
-#### res
-* `activity_main` contains the layout for `MainActivity`
-* `earthquake_list_item` defines the layout for each item in the `RecyclerView`
-* `menu_main` defines the menu layout
-
-### androidTest
-* `sync` contains `JsonUtilTest` and `UrlUtilTest`
+* The app has one activity called `MainActivity` which uses `QuakeSyncTask` to connect to the server and a `RecyclerView` with `QuakeAdapter` to display the data
+* The url building and json parsing are completed in `UrlUtil` and `JsonUtil`, which were developed using TDD
+* The data that is displayed is contained in `Earthquake`
+* `VisibilityToggle` toggles the visibility of the views in the `MainActivity`. These include the views for the data, progress bar and message, which is displayed if there are no earthquakes or there is an error.
+* The data is either refreshed by swiping down from the top or clicking an option in the spinner
 
 ## Potential Improvements
 ### Non-Technical

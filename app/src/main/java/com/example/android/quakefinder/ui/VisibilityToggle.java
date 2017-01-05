@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 /**
  * Created by David on 05/01/2017.
+ * <p>
+ * Toggles the the visibility of the data, error message and progress bar
  */
 
 public class VisibilityToggle {
