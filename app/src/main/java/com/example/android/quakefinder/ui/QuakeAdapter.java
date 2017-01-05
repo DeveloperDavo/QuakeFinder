@@ -22,6 +22,11 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
     private static final String LOG_TAG = QuakeAdapter.class.getSimpleName();
 
     private List<Earthquake> earthquakes;
+    private QuakeAdapterOnClickHandler clickHandler;
+
+    public QuakeAdapter(QuakeAdapterOnClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
+    }
 
     public void setData(List<Earthquake> earthquakes) {
         this.earthquakes = earthquakes;
@@ -50,7 +55,11 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
         }
     }
 
-    class QuakeViewHolder extends RecyclerView.ViewHolder {
+    interface QuakeAdapterOnClickHandler {
+        void onClick(Earthquake earthquake);
+    }
+
+    class QuakeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_mag)
         TextView magTextView;
@@ -61,6 +70,7 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
         QuakeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         void bind(Earthquake earthquake) {
@@ -79,5 +89,9 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
             regionTextView.setText(place);
         }
 
+        @Override
+        public void onClick(View v) {
+            clickHandler.onClick(earthquakes.get(getAdapterPosition()));
+        }
     }
 }

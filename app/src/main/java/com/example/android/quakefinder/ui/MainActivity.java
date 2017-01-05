@@ -1,5 +1,7 @@
 package com.example.android.quakefinder.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.quakefinder.R;
+import com.example.android.quakefinder.data.Earthquake;
 import com.example.android.quakefinder.sync.QuakeSyncTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements QuakeAdapter.QuakeAdapterOnClickHandler {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.rv_earthquakes)
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRV() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        quakeAdapter = new QuakeAdapter();
+        quakeAdapter = new QuakeAdapter(this);
         recyclerView.setAdapter(quakeAdapter);
     }
 
@@ -66,7 +69,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(Earthquake earthquake) {
+        final String url = earthquake.getUrl();
+        openWebPage(url);
+    }
+
+    private void openWebPage(String url) {
+        final Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
     private void loadQuakeData() {
         new QuakeSyncTask(quakeAdapter).execute();
     }
+
 }
