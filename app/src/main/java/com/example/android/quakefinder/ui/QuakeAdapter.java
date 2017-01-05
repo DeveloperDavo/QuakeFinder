@@ -52,8 +52,11 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
 
     class QuakeViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_place)
-        TextView placeTextView;
+        @BindView(R.id.tv_mag)
+        TextView magTextView;
+
+        @BindView(R.id.tv_region)
+        TextView regionTextView;
 
         QuakeViewHolder(View itemView) {
             super(itemView);
@@ -61,7 +64,20 @@ public class QuakeAdapter extends RecyclerView.Adapter<QuakeAdapter.QuakeViewHol
         }
 
         void bind(Earthquake earthquake) {
-            placeTextView.setText(earthquake.getPlace());
+            setMagTV(earthquake);
+            setRegionTV(earthquake);
         }
+
+        private void setMagTV(Earthquake earthquake) {
+            final String mag = Double.toString(earthquake.getMag());
+            magTextView.setText(mag);
+        }
+
+        private void setRegionTV(Earthquake earthquake) {
+            final String place = earthquake.getPlace();
+//            final String region = place.substring(place.lastIndexOf(',') + 1).trim();
+            regionTextView.setText(place);
+        }
+
     }
 }
