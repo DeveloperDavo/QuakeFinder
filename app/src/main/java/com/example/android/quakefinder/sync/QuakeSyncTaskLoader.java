@@ -1,11 +1,12 @@
 package com.example.android.quakefinder.sync;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import com.example.android.quakefinder.R;
 import com.example.android.quakefinder.data.Earthquake;
-import com.example.android.quakefinder.ui.QuakeAdapter;
 import com.example.android.quakefinder.ui.VisibilityToggle;
 
 import org.json.JSONException;
@@ -16,62 +17,64 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by David on 03/01/2017.
+ * Created by David on 21/01/2017.
  * <p>
  * Connects to the server on the background thread using the url built in UrlUtil.
  */
 
-public class QuakeSyncTask extends AsyncTask<String, Void, List<Earthquake>> {
-    private static final String LOG_TAG = QuakeSyncTask.class.getSimpleName();
+public class QuakeSyncTaskLoader extends AsyncTaskLoader<List<Earthquake>> {
+    private static final String LOG_TAG = AsyncTaskLoader.class.getSimpleName();
 
-    private final QuakeAdapter quakeAdapter;
-    private final VisibilityToggle visibilityToggle;
+    private final Context context;
+    private VisibilityToggle visibilityToggle;
+    private int severityId;
 
-    public QuakeSyncTask(QuakeAdapter quakeAdapter, VisibilityToggle visibilityToggle) {
-        this.quakeAdapter = quakeAdapter;
+    private List<Earthquake> earthquakes;
+
+    public QuakeSyncTaskLoader(Context context, VisibilityToggle visibilityToggle, int severityId) {
+        super(context);
+        this.context = context;
         this.visibilityToggle = visibilityToggle;
+        this.severityId = severityId;
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        visibilityToggle.showProgressBar();
-    }
-
-    @Override
-    protected List<Earthquake> doInBackground(String... params) {
-        List<Earthquake> earthquakes = new ArrayList<>();
-        if (params.length == 0) {
-            return earthquakes;
+    protected void onStartLoading() {
+        Log.d(LOG_TAG, "onStartLoading called");
+        if (earthquakes != null) {
+            deliverResult(earthquakes);
+        } else {
+            forceLoad();
+            visibilityToggle.showProgressBar();
         }
+    }
+
+    @Override
+    public List<Earthquake> loadInBackground() {
+        Log.d(LOG_TAG, "loadInBackground called");
         try {
-            earthquakes = JsonUtil.parse(getJsonString(params[0]));
+            return JsonUtil.parse(getJsonString());
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
+            return null;
         }
-        return earthquakes;
     }
 
     @Override
-    protected void onPostExecute(List<Earthquake> earthquakes) {
-        visibilityToggle.hideProgressBar();
-        if (earthquakes != null && earthquakes.size() > 0) {
-            visibilityToggle.showData();
-            quakeAdapter.setData(earthquakes);
-        } else {
-            visibilityToggle.showErrorMessage();
-        }
+    public void deliverResult(List<Earthquake> data) {
+        Log.d(LOG_TAG, "deliverResult called");
+        earthquakes = data;
+        super.deliverResult(data);
     }
 
-    private String getJsonString(String severity) {
+    private String getJsonString() {
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         try {
-            final URL url = UrlUtil.buildUrl(severity);
+            final URL url = UrlUtil.buildUrl(getSeverity());
             Log.d(LOG_TAG, "url: " + url);
 
             urlConnection = connect(url);
@@ -85,6 +88,14 @@ public class QuakeSyncTask extends AsyncTask<String, Void, List<Earthquake>> {
         } finally {
             disconnectAndClose(urlConnection, bufferedReader);
         }
+    }
+
+    @NonNull
+    private String getSeverity() {
+        if (severityId == 0) {
+            severityId = R.string.param_all;
+        }
+        return context.getString(severityId);
     }
 
     @NonNull
